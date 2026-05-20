@@ -1,0 +1,245 @@
+<UserControl x:Class="CamperoDesktop.Views.KitsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding GuardarCommand}"/>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NuevoCommand}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding BuscarCommand}"/>
+    </UserControl.InputBindings>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,0,18">
+
+            <ProgressBar Height="4"
+                         IsIndeterminate="True"
+                         Visibility="{Binding GuardarCommand.IsExecuting, Converter={StaticResource BoolToVisibilityConverter}}"
+                         Margin="0,0,0,8"/>
+
+            <Border Style="{StaticResource CardBorderStyle}" Padding="18">
+                <StackPanel>
+                    <TextBlock Text="Kits comerciales"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextBrush}"/>
+                    <TextBlock Text="Construye un kit con varios productos, calcula su stock posible por componentes y déjalo listo para ventas y cotizaciones."
+                               Margin="0,8,0,0"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               TextWrapping="Wrap"/>
+
+                    <Border Background="#EFF6FF"
+                            BorderBrush="#BFDBFE"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="12"
+                            Margin="0,14,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Regla del kit"
+                                       FontWeight="SemiBold"
+                                       Foreground="#1D4ED8"/>
+                            <TextBlock Text="{Binding StockRuleText}"
+                                       Margin="0,6,0,0"
+                                       Foreground="#1E3A8A"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <WrapPanel Margin="0,18,0,0">
+                        <StackPanel Width="220" Margin="0,0,14,14">
+                            <TextBlock Text="Almacen" Margin="0,0,0,6"/>
+                            <ComboBox ItemsSource="{Binding Warehouses}"
+                                      SelectedItem="{Binding SelectedWarehouse}"
+                                      DisplayMemberPath="Nombre"/>
+                        </StackPanel>
+
+                        <StackPanel Width="180" Margin="0,0,14,14">
+                            <TextBlock Text="Codigo" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding Codigo, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="300" Margin="0,0,14,14">
+                            <TextBlock Text="Nombre del kit" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="150" Margin="0,0,14,14">
+                            <TextBlock Text="Precio venta" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding PrecioVenta, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="320" Margin="0,0,0,14">
+                            <TextBlock Text="Descripcion" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding Descripcion, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <WrapPanel>
+                        <StackPanel Width="320" Margin="0,0,14,14">
+                            <TextBlock Text="Buscar componente" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding BuscarComponente, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Enter" Command="{Binding AgregarComponenteCommand}"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </StackPanel>
+
+                        <StackPanel Width="320" Margin="0,0,14,14">
+                            <TextBlock Text="Coincidencia" Margin="0,0,0,6"/>
+                            <ComboBox ItemsSource="{Binding ComponentOptions}"
+                                      SelectedItem="{Binding SelectedComponentOption}"
+                                      DisplayMemberPath="Nombre"/>
+                        </StackPanel>
+
+                        <StackPanel Width="110" Margin="0,0,14,14">
+                            <TextBlock Text="Cantidad" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding CantidadComponente, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="160" Margin="0,0,14,14">
+                            <TextBlock Text="Accion" Margin="0,0,0,6"/>
+                            <Button Style="{StaticResource SecondaryButtonStyle}"
+                                    Content="Agregar componente"
+                                    Command="{Binding AgregarComponenteCommand}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="150" Margin="0,0,0,14">
+                            <TextBlock Text="Edicion" Margin="0,0,0,6"/>
+                            <Button Style="{StaticResource DangerButtonStyle}" Content="Quitar"
+                                    Command="{Binding QuitarComponenteCommand}"/>
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <Border Background="{StaticResource PanelAltBrush}"
+                            BorderBrush="{StaticResource BorderBrushSoft}"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="12">
+                        <StackPanel>
+                            <TextBlock Text="Componente detectado"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="12"/>
+                            <TextBlock Text="{Binding MatchedComponentText}"
+                                       FontWeight="SemiBold"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,0"/>
+                            <TextBlock Text="{Binding MatchedComponentStatus}"
+                                       Foreground="#475569"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,18,0,0" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Margin="0,0,0,12">
+                        <TextBlock Text="Detalle del kit"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   DockPanel.Dock="Left"/>
+                        <TextBlock Text="{Binding FormStatus}"
+                                   Foreground="{StaticResource MutedTextBrush}"
+                                   DockPanel.Dock="Right"/>
+                    </DockPanel>
+
+                    <TextBlock Grid.Row="0"
+                               Margin="0,28,0,0"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               Text="Haz clic en una fila para cargarla arriba y ajustar la cantidad de ese componente."/>
+
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding Components}"
+                              SelectedItem="{Binding SelectedComponent}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
+                              MinHeight="260">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Codigo" Binding="{Binding Codigo}" Width="110"/>
+                            <DataGridTextColumn Header="Producto" Binding="{Binding Nombre}" Width="2*"/>
+                            <DataGridTextColumn Header="Unidad" Binding="{Binding UnidadMedida}" Width="90"/>
+                            <DataGridTextColumn Header="Cant. kit" Binding="{Binding Cantidad}" Width="80"/>
+                            <DataGridTextColumn Header="Stock actual" Binding="{Binding StockDisponible}" Width="90"/>
+                            <DataGridTextColumn Header="P. Compra" Binding="{Binding PrecioCompra, StringFormat=N2}" Width="95"/>
+                            <DataGridTextColumn Header="Costo ref." Binding="{Binding CostoReferencial, StringFormat=N2}" Width="100"/>
+                            <DataGridTextColumn Header="P. Venta" Binding="{Binding PrecioVenta, StringFormat=N2}" Width="90"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="2" Margin="0,14,0,0">
+                        <WrapPanel>
+                            <Border Background="{StaticResource PanelAltBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,10,10"><TextBlock Text="{Binding ComponentesText}" Foreground="#475569"/></Border>
+                            <Border Background="#FFF7ED" BorderBrush="#F5D0A6" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,10,10"><TextBlock Text="{Binding CostoReferencialText}" Foreground="#B45309"/></Border>
+                            <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,10,10"><TextBlock Text="{Binding PrecioVentaText}" Foreground="#1D4ED8"/></Border>
+                            <Border Background="#EEF8F3" BorderBrush="#CDE8D7" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,10,10"><TextBlock Text="{Binding MargenReferencialText}" Foreground="#166534" FontWeight="Bold"/></Border>
+                            <Border Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,0,10"><TextBlock Text="{Binding StockPosibleText}" Foreground="#B91C1C" FontWeight="SemiBold"/></Border>
+                        </WrapPanel>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Style="{StaticResource SecondaryButtonStyle}"
+                                    Content="Nuevo"
+                                    Width="100"
+                                    Command="{Binding NuevoCommand}"/>
+                            <Button Style="{StaticResource SecondaryButtonStyle}"
+                                    Content="Eliminar"
+                                    Width="100"
+                                    Margin="12,0,0,0"
+                                    Command="{Binding EliminarCommand}"/>
+                            <Button Content="Guardar kit"
+                                    Width="130"
+                                    Margin="12,0,0,0"
+                                    Command="{Binding GuardarCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,18,0,0" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Margin="0,0,0,12">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                            <TextBlock Text="Historial de kits" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBox Width="300"
+                                     Margin="14,0,0,0"
+                                     Text="{Binding Buscar, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding Estado}"
+                                   Foreground="{StaticResource MutedTextBrush}"
+                                   DockPanel.Dock="Right"
+                                   VerticalAlignment="Center"/>
+                    </DockPanel>
+
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding Kits}"
+                              SelectedItem="{Binding SelectedKit}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              MinHeight="240">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding IdKit}" Width="60"/>
+                            <DataGridTextColumn Header="Codigo" Binding="{Binding Codigo}" Width="120"/>
+                            <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="2*"/>
+                            <DataGridTextColumn Header="Descripcion" Binding="{Binding Descripcion}" Width="2*"/>
+                            <DataGridTextColumn Header="Comp." Binding="{Binding Componentes}" Width="70"/>
+                            <DataGridTextColumn Header="Stock posible" Binding="{Binding StockDisponible}" Width="95"/>
+                            <DataGridTextColumn Header="P. Venta" Binding="{Binding PrecioVenta, StringFormat=N2}" Width="95"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

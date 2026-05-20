@@ -1,0 +1,91 @@
+<UserControl x:Class="CamperoDesktop.Views.WarehousesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding GuardarCommand}"/>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NuevoCommand}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding BuscarCommand}"/>
+    </UserControl.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="{StaticResource PanelBrush}" CornerRadius="18" Padding="18" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.4*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1.4*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Nombre" Foreground="{StaticResource TextBrush}"/>
+                <TextBlock Grid.Column="1" Text="Direccion" Foreground="{StaticResource TextBrush}"/>
+                <TextBlock Grid.Column="2" Text="Responsable" Foreground="{StaticResource TextBrush}"/>
+
+                <TextBox Grid.Row="1" Margin="0,6,12,0" Height="34" Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="0,6,12,0" Height="34" Text="{Binding Direccion, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="1" Grid.Column="2" Margin="0,6,12,0" Height="34" Text="{Binding Responsable, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+
+                <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal" Margin="0,6,0,0">
+                    <Button Content="Nuevo" Width="90" Height="34" Command="{Binding NuevoCommand}"/>
+                    <Button Content="Guardar" Width="90" Height="34" Margin="10,0,0,0" Command="{Binding GuardarCommand}"/>
+                    <Button Style="{StaticResource DangerButtonStyle}" Content="Desactivar" Width="110" Height="34" Margin="10,0,0,0" Command="{Binding DesactivarCommand}"/>
+                </StackPanel>
+
+                <CheckBox Grid.Row="2"
+                          Margin="0,16,0,0"
+                          Content="Almacen activo"
+                          IsChecked="{Binding Activo}"/>
+
+                <Border Grid.Row="3" Grid.ColumnSpan="4" Margin="0,16,0,0" Background="{StaticResource PanelAltBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" CornerRadius="12" Padding="10">
+                    <TextBlock Text="La desactivacion es logica para no romper inventario, ventas, compras y reportes ligados a ese almacen."
+                               Foreground="#475569"
+                               TextWrapping="Wrap"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="0,18,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Background="{StaticResource PanelBrush}" CornerRadius="18" Padding="18" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <TextBlock Text="Buscar" VerticalAlignment="Center" Foreground="{StaticResource TextBrush}" Margin="0,0,12,0"/>
+                        <TextBox Width="280" Height="34" Text="{Binding Buscar, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Content="Buscar" Width="100" Height="34" Margin="12,0,0,0" Command="{Binding BuscarCommand}"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Estado}" DockPanel.Dock="Right" VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}"/>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Row="1" Background="{StaticResource PanelBrush}" CornerRadius="18" Padding="18" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" Margin="0,18,0,0">
+                <DataGrid ItemsSource="{Binding Warehouses}"
+                          SelectedItem="{Binding SelectedWarehouse}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding IdAlmacen}" Width="80"/>
+                        <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="200"/>
+                        <DataGridTextColumn Header="Direccion" Binding="{Binding Direccion}" Width="2*"/>
+                        <DataGridTextColumn Header="Responsable" Binding="{Binding Responsable}" Width="180"/>
+                        <DataGridCheckBoxColumn Header="Activo" Binding="{Binding Activo}" Width="90"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

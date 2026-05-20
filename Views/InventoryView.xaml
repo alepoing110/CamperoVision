@@ -1,0 +1,227 @@
+<UserControl x:Class="CamperoDesktop.Views.InventoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <UserControl.InputBindings>
+        <KeyBinding Key="R" Modifiers="Ctrl" Command="{Binding RefreshCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding AdjustStockCommand}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding SearchInventoryCommand}"/>
+    </UserControl.InputBindings>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,0,18">
+
+            <ProgressBar Height="4"
+                         IsIndeterminate="True"
+                         Visibility="{Binding RefreshCommand.IsExecuting, Converter={StaticResource BoolToVisibilityConverter}}"
+                         Margin="0,0,0,8"/>
+
+            <Border Style="{StaticResource CardBorderStyle}" Padding="18">
+                <StackPanel>
+                    <TextBlock Text="Movimientos y correcciones de inventario"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextBrush}"/>
+                    <TextBlock Text="Registra entradas o salidas, y si hubo un error en la adicion puedes corregir el stock desde un ajuste manual con motivo trazable."
+                               Margin="0,8,0,0"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               TextWrapping="Wrap"/>
+
+                    <WrapPanel Margin="0,18,0,0">
+                        <StackPanel Width="220" Margin="0,0,14,14">
+                            <TextBlock Text="Almacen" Margin="0,0,0,6"/>
+                            <ComboBox ItemsSource="{Binding Warehouses}"
+                                      SelectedItem="{Binding SelectedWarehouse}"
+                                      DisplayMemberPath="Nombre"/>
+                        </StackPanel>
+
+                        <StackPanel Width="320" Margin="0,0,14,14">
+                            <TextBlock Text="Buscar producto" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding ProductSearch, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="360" Margin="0,0,14,14">
+                            <TextBlock Text="Producto" Margin="0,0,0,6"/>
+                            <ComboBox ItemsSource="{Binding Products}"
+                                      SelectedItem="{Binding SelectedProduct}"
+                                      DisplayMemberPath="Display"/>
+                        </StackPanel>
+
+                        <StackPanel Width="110" Margin="0,0,14,14">
+                            <TextBlock Text="Cantidad" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding Cantidad, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="130" Margin="0,0,14,14">
+                            <TextBlock Text="Precio" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding Precio, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="300" Margin="0,0,0,14">
+                            <TextBlock Text="Motivo" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding MovementReason, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <Border Background="{StaticResource PanelAltBrush}"
+                            BorderBrush="{StaticResource BorderBrushSoft}"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="12"
+                            Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="Producto detectado"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="12"/>
+                            <TextBlock Text="{Binding MatchedProductText}"
+                                       FontWeight="SemiBold"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,0"/>
+                            <TextBlock Text="{Binding MatchedProductStatus}"
+                                       Foreground="#475569"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <WrapPanel>
+                        <Border Background="{StaticResource PanelAltBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,0,12,12">
+                            <StackPanel>
+                                <TextBlock Text="ProductoId" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                                <TextBlock Text="{Binding ProductoId}" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="{StaticResource PanelAltBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,0,12,12">
+                            <StackPanel>
+                                <TextBlock Text="Stock actual" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                                <TextBlock Text="{Binding StockActual}" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#FFF7ED" BorderBrush="#F5D0A6" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,0,12,12">
+                            <StackPanel>
+                                <TextBlock Text="Stock corregido" Foreground="#B45309" FontSize="12"/>
+                                <TextBox Width="110"
+                                         Margin="0,6,0,0"
+                                         Text="{Binding TargetStock, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                            </StackPanel>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                            <Button Content="Comprar"
+                                    Width="100"
+                                    Margin="0,0,10,0"
+                                    Command="{Binding ComprarCommand}"/>
+                            <Button Style="{StaticResource DangerButtonStyle}" Content="Quitar stock"
+                                    Width="100"
+                                    Margin="0,0,10,0"
+                                    Command="{Binding VenderCommand}"/>
+                            <Button Content="Aplicar ajuste"
+                                    Width="140"
+                                    Command="{Binding AdjustStockCommand}"/>
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <TextBlock Text="{Binding StatusMessage}"
+                               Foreground="#475569"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,18,0,0" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Margin="0,0,0,12">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                            <TextBlock Text="Inventario actual" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
+                            <TextBox Width="280"
+                                     Height="34"
+                                     Margin="18,0,0,0"
+                                     Text="{Binding InventorySearch, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Content="Filtrar"
+                                    Width="90"
+                                    Height="34"
+                                    Margin="12,0,0,0"
+                                    Command="{Binding SearchInventoryCommand}"/>
+                        </StackPanel>
+                        <Button Content="Recargar"
+                                Width="100"
+                                Height="30"
+                                Command="{Binding RefreshCommand}"
+                                DockPanel.Dock="Right"/>
+                    </DockPanel>
+
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding InventoryItems}"
+                              SelectedItem="{Binding SelectedInventoryItem}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              MinHeight="220">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID Inv." Binding="{Binding IdInventario}" Width="80"/>
+                            <DataGridTextColumn Header="Cod. barras" Binding="{Binding CodigoBarras}" Width="150"/>
+                            <DataGridTextColumn Header="Codigo" Binding="{Binding CodigoProducto}" Width="120"/>
+                            <DataGridTextColumn Header="Producto" Binding="{Binding Producto}" Width="2*"/>
+                            <DataGridTextColumn Header="Almacen" Binding="{Binding Almacen}" Width="140"/>
+                            <DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="90"/>
+                            <DataGridTextColumn Header="Stock Min." Binding="{Binding StockMinimo}" Width="90"/>
+                            <DataGridTextColumn Header="Actualizado" Binding="{Binding FechaActualizacion, StringFormat=dd/MM/yyyy HH:mm}" Width="150"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,18,0,0" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Margin="0,0,0,12">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                            <TextBlock Text="Kardex / Movimientos" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
+                            <ComboBox Width="120"
+                                      Height="34"
+                                      Margin="18,0,0,0"
+                                      ItemsSource="{Binding MovementTypes}"
+                                      SelectedItem="{Binding SelectedMovementType}"
+                                      DisplayMemberPath="Nombre"/>
+                            <TextBox Width="280"
+                                     Height="34"
+                                     Margin="12,0,0,0"
+                                     Text="{Binding KardexSearch, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Content="Aplicar"
+                                    Width="90"
+                                    Height="34"
+                                    Margin="12,0,0,0"
+                                    Command="{Binding ApplyKardexFiltersCommand}"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding KardexItems}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              MinHeight="260">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat=dd/MM/yyyy HH:mm}" Width="150"/>
+                            <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="80"/>
+                            <DataGridTextColumn Header="Cod. barras" Binding="{Binding CodigoBarras}" Width="150"/>
+                            <DataGridTextColumn Header="Codigo" Binding="{Binding Codigo}" Width="120"/>
+                            <DataGridTextColumn Header="Producto" Binding="{Binding Producto}" Width="2*"/>
+                            <DataGridTextColumn Header="Almacen" Binding="{Binding Almacen}" Width="140"/>
+                            <DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="90"/>
+                            <DataGridTextColumn Header="Usuario" Binding="{Binding Usuario}" Width="140"/>
+                            <DataGridTextColumn Header="Motivo" Binding="{Binding Motivo}" Width="2*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

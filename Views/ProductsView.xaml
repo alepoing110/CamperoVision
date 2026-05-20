@@ -1,0 +1,91 @@
+<UserControl x:Class="CamperoDesktop.Views.ProductsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveCommand}"/>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewCommand}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding SearchCommand}"/>
+    </UserControl.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="{StaticResource PanelBrush}" CornerRadius="18" Padding="18" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.4*"/>
+                    <ColumnDefinition Width="1.4*"/>
+                    <ColumnDefinition Width="1.7*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Codigo interno" Foreground="{StaticResource TextBrush}"/>
+                <TextBox Grid.Row="1" Margin="0,6,12,0" Height="34" Text="{Binding Codigo, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                <TextBlock Text="Codigo de barras" Grid.Column="1" Foreground="{StaticResource TextBrush}"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="0,6,12,0" Height="34" Text="{Binding CodigoBarras, UpdateSourceTrigger=LostFocus, ValidatesOnNotifyDataErrors=True}"/>
+                <TextBlock Text="Nombre" Grid.Column="2" Foreground="{StaticResource TextBrush}"/>
+                <TextBox Grid.Row="1" Grid.Column="2" Margin="0,6,12,0" Height="34" Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                <TextBlock Text="Categoria" Grid.Column="3" Foreground="{StaticResource TextBrush}"/>
+                <ComboBox Grid.Row="1" Grid.Column="3" Margin="0,6,12,0" Height="34" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, ValidatesOnNotifyDataErrors=True}" DisplayMemberPath="Nombre"/>
+                <StackPanel Grid.Row="1" Grid.Column="4" Orientation="Horizontal" Margin="0,6,0,0" VerticalAlignment="Top">
+                    <Button Content="Nuevo" Width="90" Height="34" Command="{Binding NuevoCommand}"/>
+                    <Button Content="Guardar" Width="90" Height="34" Margin="10,0,0,0" Command="{Binding GuardarCommand}"/>
+                </StackPanel>
+                <TextBlock Text="Precio compra" Grid.Row="2" Margin="0,14,0,0" Foreground="{StaticResource TextBrush}"/>
+                <TextBox Grid.Row="3" Margin="0,6,12,0" Height="34" Text="{Binding PrecioCompra, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                <TextBlock Text="Precio venta" Grid.Row="2" Grid.Column="1" Margin="0,14,0,0" Foreground="{StaticResource TextBrush}"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="0,6,12,0" Height="34" Text="{Binding PrecioVenta, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                <TextBlock Text="Stock minimo" Grid.Row="2" Grid.Column="2" Margin="0,14,0,0" Foreground="{StaticResource TextBrush}"/>
+                <TextBox Grid.Row="3" Grid.Column="2" Margin="0,6,12,0" Height="34" Text="{Binding StockMinimo, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                <Border Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,6,0,0" Background="{StaticResource PanelAltBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" CornerRadius="12" Padding="10">
+                    <StackPanel>
+                        <TextBlock Text="{Binding FormStatus}" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                        <TextBlock Text="Selecciona un producto de la tabla para modificarlo. Al guardar se valida que ID, codigo, codigo de barras y nombre no se repitan." Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="0,18,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Background="{StaticResource PanelBrush}" CornerRadius="18" Padding="18" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <TextBlock Text="Buscar" VerticalAlignment="Center" Foreground="{StaticResource TextBrush}" Margin="0,0,12,0"/>
+                        <TextBox Width="340" Height="34" Text="{Binding Buscar, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Content="Buscar" Width="100" Height="34" Margin="12,0,0,0" Command="{Binding BuscarCommand}"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Estado}" DockPanel.Dock="Right" VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}"/>
+                </DockPanel>
+            </Border>
+            <Border Grid.Row="1" Background="{StaticResource PanelBrush}" CornerRadius="18" Padding="18" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" Margin="0,18,0,0">
+                <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding IdProducto}" Width="70"/>
+                        <DataGridTextColumn Header="Cod. barras" Binding="{Binding CodigoBarras}" Width="150"/>
+                        <DataGridTextColumn Header="Codigo" Binding="{Binding Codigo}" Width="120"/>
+                        <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="2*"/>
+                        <DataGridTextColumn Header="Categoria" Binding="{Binding Categoria}" Width="160"/>
+                        <DataGridTextColumn Header="Compra" Binding="{Binding PrecioCompra}" Width="100"/>
+                        <DataGridTextColumn Header="Venta" Binding="{Binding PrecioVenta}" Width="100"/>
+                        <DataGridTextColumn Header="Stock Min." Binding="{Binding StockMinimo}" Width="100"/>
+                        <DataGridCheckBoxColumn Header="Activo" Binding="{Binding Activo}" Width="80"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

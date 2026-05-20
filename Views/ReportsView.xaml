@@ -1,0 +1,93 @@
+<UserControl x:Class="CamperoDesktop.Views.ReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Enter" Modifiers="Ctrl" Command="{Binding GenerateCommand}"/>
+        <KeyBinding Key="P" Modifiers="Ctrl" Command="{Binding PrintCommand}"/>
+    </UserControl.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ProgressBar Height="4"
+                     IsIndeterminate="True"
+                     Visibility="{Binding GenerateCommand.IsExecuting, Converter={StaticResource BoolToVisibilityConverter}}"
+                     Margin="0,0,0,8"/>
+
+        <Border Style="{StaticResource CardBorderStyle}" Background="{StaticResource HeroBackgroundBrush}" Padding="22">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,18,0">
+                        <TextBlock Text="Desde" Foreground="{StaticResource TextBrush}" Margin="0,0,0,6"/>
+                        <DatePicker Width="150" SelectedDate="{Binding FromDate}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="0,0,18,0">
+                        <TextBlock Text="Hasta" Foreground="{StaticResource TextBrush}" Margin="0,0,0,6"/>
+                        <DatePicker Width="150" SelectedDate="{Binding ToDate}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Margin="0,0,18,0">
+                        <TextBlock Text="Almacen" Foreground="{StaticResource TextBrush}" Margin="0,0,0,6"/>
+                        <ComboBox Width="180" ItemsSource="{Binding Warehouses}" SelectedItem="{Binding SelectedWarehouse}" DisplayMemberPath="Nombre"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <TextBlock Text="Usuario" Foreground="{StaticResource TextBrush}" Margin="0,0,0,6"/>
+                        <ComboBox Width="180" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" DisplayMemberPath="Nombre"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="0,16,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="260"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Cliente" Foreground="{StaticResource TextBrush}" Margin="0,0,0,6"/>
+                        <ComboBox Width="240" ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient}" DisplayMemberPath="Display"/>
+                    </StackPanel>
+                    <WrapPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" ItemHeight="34" Margin="12,20,0,0">
+                        <Button Content="Generar" Width="108" Height="34" Margin="0,0,10,10" Command="{Binding GenerarCommand}"/>
+                        <Button Style="{StaticResource SecondaryButtonStyle}" Content="Imprimir" Width="108" Height="34" Margin="0,0,10,10" Command="{Binding ImprimirCommand}"/>
+                        <Button Style="{StaticResource SecondaryButtonStyle}" Content="Paquete PDF" Width="122" Height="34" Margin="0,0,10,10" Command="{Binding ExportAllPdfCommand}"/>
+                        <Button Style="{StaticResource SecondaryButtonStyle}" Content="Paquete Excel" Width="122" Height="34" Margin="0,0,0,10" Command="{Binding ExportAllExcelCommand}"/>
+                    </WrapPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <UniformGrid Grid.Row="1" Columns="5" Margin="0,18,0,0">
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,8,0"><StackPanel><TextBlock Text="Dias con ventas" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Text="{Binding DiasVentas}" FontSize="24" FontWeight="Bold" Foreground="#102542" Margin="0,8,0,0"/></StackPanel></Border>
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,8,0"><StackPanel><TextBlock Text="Total vendido" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Text="{Binding TotalVendido}" FontSize="24" FontWeight="Bold" Foreground="#0D6E6E" Margin="0,8,0,0"/></StackPanel></Border>
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,8,0"><StackPanel><TextBlock Text="Stock bajo" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Text="{Binding StockBajo}" FontSize="24" FontWeight="Bold" Foreground="#7C2D12" Margin="0,8,0,0"/></StackPanel></Border>
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,8,0"><StackPanel><TextBlock Text="Clientes ventas" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Text="{Binding ClientesVentas}" FontSize="24" FontWeight="Bold" Foreground="#0D6E6E" Margin="0,8,0,0"/></StackPanel></Border>
+            <Border Style="{StaticResource CardBorderStyle}"><StackPanel><TextBlock Text="Mov. stock" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Text="{Binding MovimientosStock}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}" Margin="0,8,0,0"/></StackPanel></Border>
+        </UniformGrid>
+
+        <ScrollViewer Grid.Row="2" Margin="0,18,0,0">
+            <StackPanel Margin="0,0,0,18">
+                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions><DockPanel><TextBlock Text="Ventas por Dia" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" FontSize="16" DockPanel.Dock="Left" VerticalAlignment="Center"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right"><Button Style="{StaticResource SecondaryButtonStyle}" Content="PDF / Excel" Width="92" Height="28" Command="{Binding ExportVentasDiaCommand}"/></StackPanel></DockPanel><DataGrid Grid.Row="1" ItemsSource="{Binding VentasPorDia}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,12,0,0"><DataGrid.Columns><DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat=dd/MM/yyyy}" Width="120"/><DataGridTextColumn Header="Notas" Binding="{Binding CantidadNotas}" Width="80"/><DataGridTextColumn Header="Total" Binding="{Binding TotalVendido, StringFormat=N2}" Width="120"/></DataGrid.Columns></DataGrid></Grid></Border>
+                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions><DockPanel><TextBlock Text="Top Productos" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" FontSize="16" DockPanel.Dock="Left" VerticalAlignment="Center"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right"><Button Style="{StaticResource SecondaryButtonStyle}" Content="PDF / Excel" Width="92" Height="28" Command="{Binding ExportTopProductosCommand}"/></StackPanel></DockPanel><DataGrid Grid.Row="1" ItemsSource="{Binding TopProductos}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,12,0,0"><DataGrid.Columns><DataGridTextColumn Header="Codigo" Binding="{Binding Codigo}" Width="100"/><DataGridTextColumn Header="Producto" Binding="{Binding Producto}" Width="*"/><DataGridTextColumn Header="Cant." Binding="{Binding CantidadVendida}" Width="70"/><DataGridTextColumn Header="Total" Binding="{Binding TotalVendido, StringFormat=N2}" Width="100"/></DataGrid.Columns></DataGrid></Grid></Border>
+                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions><DockPanel><TextBlock Text="Ventas por Producto" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" FontSize="16" DockPanel.Dock="Left" VerticalAlignment="Center"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right"><Button Style="{StaticResource SecondaryButtonStyle}" Content="PDF / Excel" Width="92" Height="28" Command="{Binding ExportProductSalesCommand}"/></StackPanel></DockPanel><DataGrid Grid.Row="1" ItemsSource="{Binding VentasPorProducto}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,12,0,0"><DataGrid.Columns><DataGridTextColumn Header="Codigo" Binding="{Binding Codigo}" Width="100"/><DataGridTextColumn Header="Producto" Binding="{Binding Producto}" Width="*"/><DataGridTextColumn Header="Cant." Binding="{Binding CantidadVendida}" Width="70"/><DataGridTextColumn Header="P. Promedio" Binding="{Binding PrecioPromedio, StringFormat=N2}" Width="100"/><DataGridTextColumn Header="Descuento" Binding="{Binding DescuentoTotal, StringFormat=N2}" Width="100"/><DataGridTextColumn Header="Total" Binding="{Binding TotalVendido, StringFormat=N2}" Width="100"/></DataGrid.Columns></DataGrid></Grid></Border>
+                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions><DockPanel><TextBlock Text="Stock Bajo" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" FontSize="16" DockPanel.Dock="Left" VerticalAlignment="Center"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right"><Button Style="{StaticResource SecondaryButtonStyle}" Content="PDF / Excel" Width="92" Height="28" Command="{Binding ExportStockBajoCommand}"/></StackPanel></DockPanel><DataGrid Grid.Row="1" ItemsSource="{Binding StockBajoItems}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,12,0,0"><DataGrid.Columns><DataGridTextColumn Header="Almacen" Binding="{Binding Almacen}" Width="110"/><DataGridTextColumn Header="Codigo" Binding="{Binding Codigo}" Width="90"/><DataGridTextColumn Header="Producto" Binding="{Binding Producto}" Width="*"/><DataGridTextColumn Header="Cant." Binding="{Binding Cantidad}" Width="70"/><DataGridTextColumn Header="Min." Binding="{Binding StockMinimo}" Width="70"/></DataGrid.Columns></DataGrid></Grid></Border>
+                <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions><DockPanel><TextBlock Text="Ventas por Cliente" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" FontSize="16" DockPanel.Dock="Left" VerticalAlignment="Center"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right"><Button Style="{StaticResource SecondaryButtonStyle}" Content="PDF / Excel" Width="92" Height="28" Command="{Binding ExportSalesByClientCommand}"/></StackPanel></DockPanel><DataGrid Grid.Row="1" ItemsSource="{Binding VentasPorCliente}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,12,0,0"><DataGrid.Columns><DataGridTextColumn Header="Cliente" Binding="{Binding Cliente}" Width="200"/><DataGridTextColumn Header="CI/NIT" Binding="{Binding CiNit}" Width="100"/><DataGridTextColumn Header="Notas" Binding="{Binding CantidadNotas}" Width="80"/><DataGridTextColumn Header="Total" Binding="{Binding TotalVendido, StringFormat=N2}" Width="*"/></DataGrid.Columns></DataGrid></Grid></Border>
+                <Border Style="{StaticResource CardBorderStyle}"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions><DockPanel><TextBlock Text="Movimientos de Inventario" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" FontSize="16" DockPanel.Dock="Left" VerticalAlignment="Center"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right"><Button Style="{StaticResource SecondaryButtonStyle}" Content="PDF / Excel" Width="92" Height="28" Command="{Binding ExportInventoryMovementsCommand}"/></StackPanel></DockPanel><DataGrid Grid.Row="1" ItemsSource="{Binding MovimientosInventario}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,12,0,0"><DataGrid.Columns><DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat=dd/MM/yyyy HH:mm}" Width="140"/><DataGridTextColumn Header="Producto" Binding="{Binding Producto}" Width="*"/><DataGridTextColumn Header="Almacen" Binding="{Binding Almacen}" Width="100"/><DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="80"/><DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="80"/><DataGridTextColumn Header="Motivo" Binding="{Binding Motivo}" Width="150"/></DataGrid.Columns></DataGrid></Grid></Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

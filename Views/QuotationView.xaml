@@ -1,0 +1,232 @@
+<UserControl x:Class="CamperoDesktop.Views.QuotationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Enter" Modifiers="Ctrl" Command="{Binding GenerateQuotationCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveQuotationCommand}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding SearchCommand}"/>
+    </UserControl.InputBindings>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,0,18">
+
+            <ProgressBar Height="4"
+                         IsIndeterminate="True"
+                         Visibility="{Binding GenerateQuotationCommand.IsExecuting, Converter={StaticResource BoolToVisibilityConverter}}"
+                         Margin="0,0,0,8"/>
+
+            <Border Style="{StaticResource CardBorderStyle}" Padding="18">
+                <StackPanel>
+                    <TextBlock Text="Cotizaciones para clientes"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextBrush}"/>
+                    <TextBlock Text="Arma la propuesta comercial, ajusta descuentos e imprime la cotizacion con cabecera del negocio."
+                               Margin="0,8,0,0"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               TextWrapping="Wrap"/>
+                    <Border Background="#EFF6FF"
+                            BorderBrush="#BFDBFE"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="12"
+                            Margin="0,14,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Codigo de cotizacion:"
+                                       FontWeight="SemiBold"
+                                       Foreground="#1D4ED8"/>
+                            <TextBlock Text="{Binding QuotationCodeText}"
+                                       Margin="8,0,0,0"
+                                       Foreground="#1E3A8A"/>
+                        </StackPanel>
+                    </Border>
+
+                    <WrapPanel Margin="0,18,0,0">
+                        <StackPanel Width="220" Margin="0,0,14,14">
+                            <TextBlock Text="Almacen" Margin="0,0,0,6"/>
+                            <ComboBox ItemsSource="{Binding Warehouses}"
+                                      SelectedItem="{Binding SelectedWarehouse}"
+                                      DisplayMemberPath="Nombre"/>
+                        </StackPanel>
+
+                        <StackPanel Width="260" Margin="0,0,14,14">
+                            <TextBlock Text="Cliente" Margin="0,0,0,6"/>
+                            <ComboBox ItemsSource="{Binding Clients}"
+                                      SelectedItem="{Binding SelectedClient}"
+                                      DisplayMemberPath="Display"/>
+                        </StackPanel>
+
+                        <StackPanel Width="300" Margin="0,0,14,14">
+                            <TextBlock Text="Cliente ocasional" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding BuyerName, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="160" Margin="0,0,14,14">
+                            <TextBlock Text="CI/NIT" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding BuyerCiNit, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="150" Margin="0,0,0,14">
+                            <TextBlock Text="Desc. general" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding QuotationDiscount, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <WrapPanel>
+                        <StackPanel Width="320" Margin="0,0,14,14">
+                            <TextBlock Text="Buscar producto o kit" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Enter" Command="{Binding AddItemCommand}"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </StackPanel>
+
+                        <StackPanel Width="320" Margin="0,0,14,14">
+                            <TextBlock Text="Coincidencia" Margin="0,0,0,6"/>
+                            <ComboBox ItemsSource="{Binding Products}"
+                                      SelectedItem="{Binding SelectedProduct}"
+                                      IsDropDownOpen="{Binding IsProductDropdownOpen}"
+                                      DisplayMemberPath="Display"/>
+                        </StackPanel>
+
+                        <StackPanel Width="110" Margin="0,0,14,14">
+                            <TextBlock Text="Cantidad" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="140" Margin="0,0,14,14">
+                            <TextBlock Text="Tipo desc." Margin="0,0,0,6"/>
+                            <ComboBox ItemsSource="{Binding DiscountTypes}"
+                                      SelectedItem="{Binding SelectedDiscountType}"
+                                      DisplayMemberPath="Nombre"/>
+                        </StackPanel>
+
+                        <StackPanel Width="120" Margin="0,0,14,14">
+                            <TextBlock Text="Descuento" Margin="0,0,0,6"/>
+                            <TextBox Text="{Binding ItemDiscount, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+                        </StackPanel>
+
+                        <StackPanel Width="140" Margin="0,0,0,14">
+                            <TextBlock Text="Accion" Margin="0,0,0,6"/>
+                            <Button Style="{StaticResource SecondaryButtonStyle}"
+                                    Content="{Binding ItemActionText}"
+                                    Command="{Binding AddItemCommand}"/>
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <Border Background="{StaticResource PanelAltBrush}"
+                            BorderBrush="{StaticResource BorderBrushSoft}"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="12">
+                        <StackPanel>
+                            <TextBlock Text="Producto detectado"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="12"/>
+                            <TextBlock Text="{Binding MatchedProductText}"
+                                       FontWeight="SemiBold"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,0"/>
+                            <TextBlock Text="{Binding MatchedProductStatus}"
+                                       Foreground="#475569"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,18,0,0" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Margin="0,0,0,12">
+                        <TextBlock Text="Detalle de cotizacion"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   DockPanel.Dock="Left"/>
+                        <TextBlock Text="Lista pensada para monitores chicos y grandes"
+                                   Foreground="{StaticResource MutedTextBrush}"
+                                   DockPanel.Dock="Right"/>
+                    </DockPanel>
+
+                    <TextBlock Grid.Row="0"
+                               Margin="0,28,0,0"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               Text="Haz clic en una fila para cargarla arriba y modificarla."/>
+
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding Items}"
+                              SelectedItem="{Binding SelectedDetail}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
+                              MinHeight="260">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="CB" Binding="{Binding CodigoBarras}" Width="120"/>
+                            <DataGridTextColumn Header="Codigo" Binding="{Binding Codigo}" Width="90"/>
+                            <DataGridTextColumn Header="Producto" Binding="{Binding Producto}" Width="180"/>
+                            <DataGridTextColumn Header="Descripcion" Binding="{Binding Descripcion}" Width="2*"/>
+                            <DataGridTextColumn Header="Unidad" Binding="{Binding UnidadMedida}" Width="90"/>
+                            <DataGridTextColumn Header="Cant." Binding="{Binding Cantidad}" Width="70"/>
+                            <DataGridTextColumn Header="P. Unit" Binding="{Binding PrecioUnitario, StringFormat=N2}" Width="85"/>
+                            <DataGridTextColumn Header="Base" Binding="{Binding BaseSubtotal, StringFormat=N2}" Width="85"/>
+                            <DataGridTextColumn Header="Tipo" Binding="{Binding TipoDescuento}" Width="80"/>
+                            <DataGridTextColumn Header="Desc." Binding="{Binding Descuento, StringFormat=N2}" Width="85"/>
+                            <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal, StringFormat=N2}" Width="95"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="2" Margin="0,14,0,0">
+                        <WrapPanel Margin="0,0,0,8">
+                            <StackPanel Width="1000" MaxWidth="1000">
+                                <TextBlock Text="Observaciones" Margin="0,0,0,6"/>
+                                <TextBox Text="{Binding Observations, UpdateSourceTrigger=PropertyChanged}"
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap"
+                                         MinHeight="72"/>
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <WrapPanel>
+                            <Border Background="{StaticResource PanelAltBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,10,10"><TextBlock Text="{Binding SubtotalText}" Foreground="#475569"/></Border>
+                            <Border Background="#FFF7ED" BorderBrush="#F5D0A6" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,10,10"><TextBlock Text="{Binding DiscountItemsText}" Foreground="#B45309"/></Border>
+                            <Border Background="#FFF7ED" BorderBrush="#F5D0A6" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,10,10"><TextBlock Text="{Binding DiscountGeneralText}" Foreground="#B45309"/></Border>
+                            <Border Background="#FFF7ED" BorderBrush="#F5D0A6" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,10,10"><TextBlock Text="{Binding DiscountTotalText}" Foreground="#B45309"/></Border>
+                            <Border Background="#EEF8F3" BorderBrush="#CDE8D7" BorderThickness="1" CornerRadius="12" Padding="12,8" Margin="0,0,0,10"><TextBlock Text="{Binding TotalText}" Foreground="#166534" FontWeight="Bold"/></Border>
+                        </WrapPanel>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Style="{StaticResource SecondaryButtonStyle}"
+                                    Content="Cancelar edicion"
+                                    Width="130"
+                                    Command="{Binding CancelItemEditCommand}"/>
+                            <Button Style="{StaticResource DangerButtonStyle}" Content="Quitar item"
+                                    Width="120"
+                                    Margin="12,0,0,0"
+                                    Command="{Binding RemoveItemCommand}"/>
+                            <Button Style="{StaticResource SecondaryButtonStyle}"
+                                    Content="Limpiar"
+                                    Width="110"
+                                    Margin="12,0,0,0"
+                                    Command="{Binding ClearQuotationCommand}"/>
+                            <Button Content="Generar cotizacion"
+                                    Width="170"
+                                    Margin="12,0,0,0"
+                                    Command="{Binding GenerateQuotationCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
+
+
